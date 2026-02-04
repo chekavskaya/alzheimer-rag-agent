@@ -1,40 +1,45 @@
-# RAG System for Scientific NLP (Alzheimer’s Disease)
+# RAG-система 
+## Обзор проекта
 
-## Project Overview
+Проект представляет собой end-to-end RAG-систему (Retrieval-Augmented Generation) для ответов на вопросы научного NLP, основанную на биомедицинской литературе (PubMed).
+Он демонстрирует практическую работу с LLM, NLP-пайплайнами, эмбеддингами, векторным поиском и архитектурой, готовой к оценке.
 
-This is an end-to-end Retrieval-Augmented Generation (RAG) system for answering scientific NLP questions using biomedical literature (PubMed).
-It showcases hands-on work with LLMs, NLP pipelines, embeddings, vector search, and evaluation-ready ML architecture.
+Система построена как исследовательский ML-прототип, близкий к реальным ML/NLP-воркфлоу.
 
-Designed as a research-oriented ML prototype, it mirrors real-world scientific NLP workflows.
+## Архитектура
+1. Retrieval (Поиск информации)
 
-## Architecture
+* Используется модель sentence-transformers/all-MiniLM-L6-v2
 
-### 1. Retrieval
+* Вычисление эмбеддингов с использованием PyTorch
 
-* Uses `sentence-transformers/all-MiniLM-L6-v2`
-* Embedding computation with PyTorch backend
-* FAISS vector index (inner product and normalization)
-* Retrieves relevant scientific text chunks with metadata (PMID, title)
+* Векторный индекс FAISS (inner product, нормализация)
 
-### 2. Generation
+* Поиск релевантных текстовых чанков с метаданными (PMID, заголовок)
 
-* LLM accessed via OpenRouter API
-* Prompt engineering for scientific-style answers
-* Explicit restriction to retrieved context (no hallucinations)
-* Source citation support
+2. Generation (Генерация ответа)
 
-### 3. Pipeline
+* LLM через OpenRouter API
 
-* Modular pipeline combining retrieval and generation
-* Easily extensible for benchmarking, evaluation, or model replacement
+* Prompt engineering для научного стиля с опорой на контекст
 
-### 4. UI & Visualization
+* Ограничение генерации только извлечённым контекстом (без “галлюцинаций”)
 
-* Streamlit app for interactive querying
-* Displays answers and cited sources
-* Useful for qualitative analysis and demo purposes
+* Поддержка ссылок на источники
 
-## Technologies Used
+3. Pipeline
+
+* Модульный пайплайн для соединения retrieval и generation
+
+* Лёгко расширяемый для бенчмарков, оценки или замены моделей
+
+4. UI & Визуализация
+
+* Streamlit-приложение для интерактивных запросов
+
+* Отображение ответа и источников
+
+## Используемые технологии
 
 * **PyTorch, HuggingFace (sentence-transformers)**
 * **FAISS for vector search**
@@ -42,11 +47,48 @@ Designed as a research-oriented ML prototype, it mirrors real-world scientific N
 * **Streamlit**
 * **LLM APIs (OpenRouter)**
 
-## How to run 
+## Как запустить 
 
 pip install -r requirements.txt
-
-In app/main.py:
-OPENROUTER_API_KEY = "your_openrouter_api_key"
-
+In app/main.py:OPENROUTER_API_KEY = "your_openrouter_api_key"
 streamlit run app/main.py
+
+## Ответы на вопросы
+
+1. На какие модальности данных можно расширить решение?
+
+Текст: расширение за пределы PubMed (клинические отчёты, патенты, новости о лекарствах).
+
+Структурированные данные: базы данных биомаркеров, результаты клинических исследований.
+
+Изображения: медицинские снимки (MRI, PET) с помощью мульти-модальных моделей.
+
+Временные ряды: данные о прогрессии болезни, когнитивные тесты, биометрические показатели.
+
+2. Как это можно сделать?
+
+Мультимодальные embeddings: объединение текстовых и визуальных представлений в общую векторную пространство (например, CLIP или MedCLIP для изображений).
+
+Модификация pipeline: добавить новые retrieval-компоненты под каждую модальность.
+
+Объединение контекста: генератор LLM будет использовать мульти-модальные контексты для ответа.
+
+Фильтрация и согласование источников: чтобы сохранить точность и цитируемость при разных типах данных.
+
+3. Какие модели и почему выбрали для решения?
+
+Sentence-Transformers / MiniLM – для текстовых embeddings: быстро, компактно, хорошо подходит для semantic search.
+
+FAISS – для эффективного поиска релевантных chunks.
+
+OpenRouter / GPT-4o-mini – генерация научно структурированных ответов, гибкость prompt-инженеринга, поддержка source citation.
+
+Streamlit – интерактивная визуализация и демонстрация прототипа.
+
+* Обоснование выбора:
+
+Баланс между точностью и скоростью – MiniLM позволяет обрабатывать сотни текстов без сильных требований к ресурсам.
+
+Модульность – легко заменять LLM или embeddings-модель.
+
+Научная достоверность – генератор строго ограничен контекстом, минимизация галлюцинаций.
