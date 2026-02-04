@@ -1,4 +1,7 @@
 # RAG-система 
+<img width="1110" height="1200" alt="1" src="https://github.com/user-attachments/assets/2acc23df-8131-4d55-8325-ba0f6b51640c" />
+<img width="1132" height="516" alt="2" src="https://github.com/user-attachments/assets/e778bd22-9a4b-44b4-8b97-96c978c6708f" />
+
 ## Обзор проекта
 
 Проект представляет собой end-to-end RAG-систему для ответов на вопросы научного NLP, основанную на биомедицинской литературе.
