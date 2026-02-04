@@ -11,6 +11,7 @@ OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 
 
+
 @st.cache_resource
 def load_retriever():
     return Retriever(
