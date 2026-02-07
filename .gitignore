@@ -6,13 +6,21 @@ __pycache__/
 .env
 .venv
 venv/
+env/
 
-# Streamlit
-.streamlit/
+
+.streamlit/secrets.toml
+
+
+data/*.csv
+data/*.xlsx
+
+*.index
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Models / caches
+# Models / caches 
 .cache/
+.huggingface/

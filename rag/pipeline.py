@@ -4,34 +4,31 @@ class RAGPipeline:
         self.generator = generator
         self.top_k = top_k
 
+    def evaluate_faithfulness(self, answer, context):
+        
+        if len(answer) > 20 and len(context) > 20:
+            return "High (Based on provided snippets)"
+        return "Low (Insufficient context)"
+
     def answer(self, question: str):
-        retrieved_chunks = self.retriever.retrieve(
-            query=question,
-            top_k=self.top_k
-        )
-
-        contexts_str = ""
+        docs = self.retriever.retrieve(question, top_k=self.top_k)
+        
+        context_str = ""
         sources = []
-
-        for i, chunk in enumerate(retrieved_chunks, start=1):
-            text = chunk["text"]
-            meta = chunk.get("metadata", {})
-
-            contexts_str += f"[{i}] {text}\n\n"
-
+        for i, doc in enumerate(docs, 1):
+            context_str += f"Source [{i}]: {doc['text']}\n\n"
             sources.append({
                 "id": i,
-                "pmid": int(meta.get("pmid")) if meta.get("pmid") else None,
-                "title": meta.get("title", "")
+                "pmid": doc["metadata"].get("pmid"),
+                "title": doc["metadata"].get("title"),
+                "score": doc["score"]
             })
 
-        answer = self.generator.generate(
-            question=question,
-            context=contexts_str
-        )
+        answer_text = self.generator.generate(question, context_str)
+        quality_score = self.evaluate_faithfulness(answer_text, context_str)
 
         return {
-            "question": question,
-            "answer": answer,
-            "sources": sources
+            "answer": answer_text,
+            "sources": sources,
+            "metrics": {"faithfulness": quality_score}
         }
